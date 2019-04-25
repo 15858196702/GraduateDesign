@@ -1,21 +1,9 @@
 package xyz.dean.tutor_manager.pojo;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "user")
 public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
-
-    @Column(name = "username")
-    private String username;
-
-    @Column(name = "password")
-    private String password;
+    private int     id;
+    private String  username;
+    private String  password;
 
     public int getId() {
         return id;
