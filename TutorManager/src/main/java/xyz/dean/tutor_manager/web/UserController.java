@@ -33,12 +33,16 @@ public class UserController {
             @RequestParam(value = "start", defaultValue = "0")int start,
             @RequestParam(value = "size" , defaultValue = "5")int size) {
         PageHelper.startPage(start, size, "id desc");
+        //这部分是把数据全部读取到内存中，数据量比较大的时候性能会很差吧
+        //优化思路
+        //第一次请求分页时从数据库获取一大块数据，
+        //如果第二次请求的区间在第一次从数据库获取的范围内，则不再从数据库读取。
         List<User> users = userMapper.getAllUsers();
         PageInfo<User> page = new PageInfo<>(users);
 
         //分页
         List<User> uPage = page.getList();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (User user:uPage) {
             sb.append(user.getUsername())
                     .append("|");
