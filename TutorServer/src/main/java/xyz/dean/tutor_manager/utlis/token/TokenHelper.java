@@ -1,8 +1,8 @@
 package xyz.dean.tutor_manager.utlis.token;
 
 public interface TokenHelper {
-    TokenModel create(Integer id);
+    TokenModel create(String username);
     boolean check(TokenModel token);
     TokenModel get(String authStr);
-    boolean delete(Integer id);
+    boolean delete(String username);
 }

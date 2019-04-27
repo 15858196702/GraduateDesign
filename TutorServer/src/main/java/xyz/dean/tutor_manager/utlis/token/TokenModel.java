@@ -3,23 +3,23 @@ package xyz.dean.tutor_manager.utlis.token;
 import java.util.Date;
 
 public class TokenModel {
-    private Integer id;
+    private String username;
     private String token;
-    private Date createTime;
-    private long duration;
+    private Long createTime;
+    private Long duration;
 
-    public TokenModel(Integer id, String token, Date createTime, long duration) {
-        this.id = id;
+    public TokenModel(String username, String token, Long createTime, Long duration) {
+        this.username = username;
         this.token = token;
         this.createTime = createTime;
         this.duration = duration;
     }
 
-    public Integer getId() {
-        return id;
+    public String getUsername() {
+        return username;
     }
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(String username) {
+        this.username = username;
     }
     public String getToken() {
         return token;
@@ -27,16 +27,16 @@ public class TokenModel {
     public void setToken(String token) {
         this.token = token;
     }
-    public Date getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
-    public long getDuration() {
+    public Long getDuration() {
         return duration;
     }
-    public void setDuration(long duration) {
+    public void setDuration(Long duration) {
         this.duration = duration;
     }
 }

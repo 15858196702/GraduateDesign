@@ -5,7 +5,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import xyz.dean.tutor_manager.utlis.token.NoneAuth;
 import xyz.dean.tutor_manager.utlis.token.TokenHelper;
+import xyz.dean.tutor_manager.utlis.token.TokenModel;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +34,15 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-        String authStr = request.getHeader("authStr");
+        String authStr = request.getHeader("auth");
+        TokenModel model = tokenHelper.get(authStr);
+
+        if (tokenHelper.check(model)) {
+            return true;
+        }
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=utf-8");
+        response.getWriter().write("权限未认证");
+        return false;
     }
 }

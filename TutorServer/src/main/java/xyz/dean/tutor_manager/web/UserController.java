@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.dean.tutor_manager.mapper.UserMapper;
 import xyz.dean.tutor_manager.pojo.User;
+import xyz.dean.tutor_manager.utlis.token.NoneAuth;
+import xyz.dean.tutor_manager.utlis.token.TokenHelper;
+import xyz.dean.tutor_manager.utlis.token.TokenModel;
 
 import java.util.List;
 
@@ -16,13 +19,17 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    TokenHelper tokenHelper;
 
+    @NoneAuth
     @GetMapping("/login")
     public String login(String username, String password) {
         User user = userMapper.findUserByName(username);
 
         if (user.getPassword().equals(password)) {
-            return "Success";
+            TokenModel model = tokenHelper.create(username);
+            return username + "_" + model.getToken();
         } else {
             return "Failure";
         }
