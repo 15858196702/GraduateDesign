@@ -18,6 +18,8 @@ public interface UserMapper {
     @Select("select * from user where username = #{username}")
     User findUserByName(String username);
 
-    @Insert("insert into user (username, password) values (#{username}, #{password})")
-    void registerUser(User user);
+    @Insert("insert into " +
+                "user(username, password, age, sex, introduce, avatar_url, address, job) " +
+                "values(#{username}, #{password}, #{age}, #{sex}, #{introduce}, #{avatarUrl}, #{address}, #{job})")
+    int registerUser(User user);
 }
