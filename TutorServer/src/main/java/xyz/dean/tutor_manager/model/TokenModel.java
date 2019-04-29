@@ -1,4 +1,4 @@
-package xyz.dean.tutor_manager.utlis.token;
+package xyz.dean.tutor_manager.model;
 
 import java.util.Date;
 

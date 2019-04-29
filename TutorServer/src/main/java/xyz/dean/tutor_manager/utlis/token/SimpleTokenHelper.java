@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import xyz.dean.tutor_manager.mapper.TokenMapper;
+import xyz.dean.tutor_manager.model.TokenModel;
 
 import java.util.List;
 import java.util.UUID;

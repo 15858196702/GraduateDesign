@@ -5,9 +5,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import xyz.dean.tutor_manager.common.ResponseCode;
 import xyz.dean.tutor_manager.utlis.token.NoneAuth;
 import xyz.dean.tutor_manager.utlis.token.TokenHelper;
-import xyz.dean.tutor_manager.utlis.token.TokenModel;
+import xyz.dean.tutor_manager.model.TokenModel;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,7 +43,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
-        response.getWriter().write("权限未认证");
+        String re = "{"
+                    + "\"code\":" + ResponseCode.INVALID_TOKEN + ","
+                    + "\"msg\" :" + "\"无效token\"" + ","
+                    + "\"data\":" + "null"
+                    + "}";
+        response.getWriter().write(re);
         return false;
     }
 }

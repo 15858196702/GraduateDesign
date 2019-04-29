@@ -3,6 +3,7 @@ package xyz.dean.tutor_manager.mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 import xyz.dean.tutor_manager.pojo.User;
 
@@ -22,4 +23,9 @@ public interface UserMapper {
                 "user(username, password, age, sex, introduce, avatar_url, address, job) " +
                 "values(#{username}, #{password}, #{age}, #{sex}, #{introduce}, #{avatarUrl}, #{address}, #{job})")
     int registerUser(User user);
+
+    @Update("update user " +
+                "set password = #{password}, age = #{age}, sex = #{sex}, introduce = #{introduce}, avatar_url = #{avatarUrl}, address = #{address}, job = #{job} " +
+                "where username = #{username}")
+    int update(User user);
 }

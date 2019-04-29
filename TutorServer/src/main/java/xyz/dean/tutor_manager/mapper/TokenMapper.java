@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
-import xyz.dean.tutor_manager.utlis.token.TokenModel;
+import xyz.dean.tutor_manager.model.TokenModel;
 
 import java.util.List;
 

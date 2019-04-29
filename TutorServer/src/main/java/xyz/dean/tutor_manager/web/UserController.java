@@ -1,17 +1,14 @@
 package xyz.dean.tutor_manager.web;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import xyz.dean.tutor_manager.common.ResponseCode;
 import xyz.dean.tutor_manager.mapper.UserMapper;
 import xyz.dean.tutor_manager.pojo.User;
-import xyz.dean.tutor_manager.trans.ResponseData;
+import xyz.dean.tutor_manager.model.ResponseData;
 import xyz.dean.tutor_manager.utlis.token.NoneAuth;
 import xyz.dean.tutor_manager.utlis.token.TokenHelper;
-import xyz.dean.tutor_manager.utlis.token.TokenModel;
-
-import java.util.List;
+import xyz.dean.tutor_manager.model.TokenModel;
 
 @RestController
 public class UserController {
@@ -26,11 +23,13 @@ public class UserController {
         ResponseData response;
         User user = userMapper.findUserByName(username);
 
-        if (user.getPassword().equals(password)) {
+        if (user == null) {
+            response = ResponseData.errorResponse(ResponseCode.NOT_REGISTER);
+        }else if (user.getPassword().equals(password)) {
             TokenModel model = tokenHelper.create(username);
-            response = new ResponseData<>(0, "", model);
+            response = ResponseData.successResponse(model);
         } else {
-            response = new ResponseData<>(-100, "登录失败", null);
+            response = ResponseData.errorResponse(ResponseCode.WRONG_PWD);
         }
         return response;
     }
@@ -42,18 +41,40 @@ public class UserController {
         User findUser = userMapper.findUserByName(user.getUsername());
 
         if (findUser != null) {
-            response = new ResponseData<>(-101, "用户名已被注册。", null);
+            response = ResponseData.errorResponse(ResponseCode.NAME_IS_TAKEN);
         } else {
             int result = userMapper.registerUser(user);
             if (result < 1) {
-                response = new ResponseData<>(-401, "数据库发生错误。", null);
+                response = ResponseData.errorResponse(ResponseCode.DB_ERROR);
             } else {
-                response = new ResponseData<>(0, "", user);
+                response = ResponseData.successResponse(null);
             }
         }
         return response;
     }
 
+    @RequestMapping("/update")
+    public ResponseData update(@RequestHeader String auth, @RequestBody User user) {
+        ResponseData response;
+        TokenModel token = tokenHelper.get(auth);
+        if (token.getUsername() != null && token.getUsername().equals(user.getUsername())) {
+            int result = userMapper.update(user);
+            if (result < 1) {
+                response = ResponseData.errorResponse(ResponseCode.DB_ERROR);
+            } else {
+                response = ResponseData.successResponse(null);
+            }
+        } else {
+            response = ResponseData.unknownError(null);
+        }
+        return response;
+    }
+
+    @NoneAuth
+    @GetMapping("/user")
+    public User get(String username) {
+        return userMapper.findUserByName(username);
+    }
 //    @GetMapping("/user-list")
 //    public String getAll(
 //            @RequestParam(value = "start", defaultValue = "0")int start,
