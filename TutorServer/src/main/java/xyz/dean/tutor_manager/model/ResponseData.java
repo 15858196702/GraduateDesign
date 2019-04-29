@@ -57,6 +57,9 @@ public class ResponseData<T> {
             case ResponseCode.NOT_REGISTER:
                 response = new ResponseData<>(errorCode, "用户未注册", null);
                 break;
+            case ResponseCode.INVALID_TOKEN:
+                response = new ResponseData<>(errorCode, "无效token", null);
+                break;
             default:
                 response = new ResponseData<>(errorCode, "未处理错误", null);
         }

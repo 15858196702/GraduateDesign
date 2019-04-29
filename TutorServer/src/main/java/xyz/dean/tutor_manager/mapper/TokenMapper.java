@@ -13,11 +13,11 @@ import java.util.List;
 @Mapper
 public interface TokenMapper {
     @Insert("insert into token(username, token, create_time, duration) values(#{username}, #{token}, #{createTime}, #{duration})")
-    void addToken(TokenModel tokenModel);
+    int addToken(TokenModel tokenModel);
 
     @Select("select * from token where username = #{username}")
     List<TokenModel> getTokenByUsername(String username);
 
     @Delete("delete from token where username = #{username} and token = #{token}")
-    void expireToken(TokenModel tokenModel);
+    int expireToken(TokenModel tokenModel);
 }

@@ -24,7 +24,6 @@ public class SimpleTokenHelper implements TokenHelper{
 
     @Override
     public boolean check(TokenModel mode) {
-        boolean result = false;
         if(mode != null) {
             String username = mode.getUsername();
             String token = mode.getToken();
@@ -35,10 +34,8 @@ public class SimpleTokenHelper implements TokenHelper{
                     return true;
                 }
             }
-
-            return true;
         }
-        return result;
+        return false;
     }
 
     @Override
@@ -54,7 +51,8 @@ public class SimpleTokenHelper implements TokenHelper{
     }
 
     @Override
-    public boolean delete(String username) {
-        return false;
+    public boolean delete(TokenModel model) {
+        int result = tokenMapper.expireToken(model);
+        return result < 1;
     }
 }

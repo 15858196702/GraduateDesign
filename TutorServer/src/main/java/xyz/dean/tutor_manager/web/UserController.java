@@ -70,10 +70,22 @@ public class UserController {
         return response;
     }
 
-    @NoneAuth
-    @GetMapping("/user")
-    public User get(String username) {
-        return userMapper.findUserByName(username);
+    @RequestMapping("/logout")
+    public ResponseData logout(@RequestHeader String auth) {
+        ResponseData response;
+        TokenModel token = tokenHelper.get(auth);
+        boolean result = tokenHelper.delete(token);
+        if (result) {
+            response = ResponseData.successResponse(null);
+        } else {
+            response = ResponseData.errorResponse(ResponseCode.INVALID_TOKEN);
+        }
+        return response;
+    }
+
+    @RequestMapping("/user")
+    public ResponseData get(@RequestHeader String auth, String username) {
+        return ResponseData.successResponse(userMapper.findUserByName(username));
     }
 //    @GetMapping("/user-list")
 //    public String getAll(

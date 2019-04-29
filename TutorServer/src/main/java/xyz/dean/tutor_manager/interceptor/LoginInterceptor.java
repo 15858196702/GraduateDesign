@@ -36,6 +36,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
 
         String authStr = request.getHeader("auth");
+        System.out.println("auth:" + authStr);
         TokenModel model = tokenHelper.get(authStr);
 
         if (tokenHelper.check(model)) {
