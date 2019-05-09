@@ -12,6 +12,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     public ResponseData defaultErrorHandler(HttpServletRequest req, Exception e) {
+        e.printStackTrace();
         return ResponseData
                 .unknownError(e)
                 .setMsg("在访问"+req.getRequestURL()+"时发生了错误:"+e.getMessage());

@@ -1,14 +1,19 @@
 package xyz.dean.tutor_manager.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import xyz.dean.tutor_manager.common.ResponseCode;
 import xyz.dean.tutor_manager.mapper.UserMapper;
-import xyz.dean.tutor_manager.pojo.User;
 import xyz.dean.tutor_manager.model.ResponseData;
+import xyz.dean.tutor_manager.model.TokenModel;
+import xyz.dean.tutor_manager.pojo.User;
 import xyz.dean.tutor_manager.utlis.token.NoneAuth;
 import xyz.dean.tutor_manager.utlis.token.TokenHelper;
-import xyz.dean.tutor_manager.model.TokenModel;
+
+import java.io.File;
+import java.io.IOException;
 
 @RestController
 public class UserController {
@@ -16,7 +21,9 @@ public class UserController {
     UserMapper userMapper;
     @Autowired
     TokenHelper tokenHelper;
-
+    @Autowired
+    ResourceLoader resourceLoader;
+    
     @NoneAuth
     @RequestMapping("/login")
     public ResponseData login(String username, String password) {
@@ -84,9 +91,40 @@ public class UserController {
     }
 
     @RequestMapping("/user")
-    public ResponseData get(@RequestHeader String auth, String username) {
-        return ResponseData.successResponse(userMapper.findUserByName(username));
+    public ResponseData get(String username) {
+        User user = userMapper.findUserByName(username);
+        System.out.println(user.getAvatarUrl());
+        return ResponseData.successResponse(user);
     }
+
+    @RequestMapping("/uploadAvatar")
+    public ResponseData uploadAvatar(@RequestHeader String auth,
+                                     @RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseData.unknownError(null);
+        }
+        ResponseData response;
+        TokenModel token = tokenHelper.get(auth);
+        String fileName = file.getOriginalFilename();
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));  //获取后缀名
+        String destPath = "E://avatar/" + token.getUsername() + suffixName;
+
+        File dest = new File(destPath);
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();
+        }
+        try {
+             file.transferTo(dest);
+             String avatarUrl = "/avatar/" + token.getUsername() + suffixName;
+             userMapper.setAvatar(avatarUrl, token.getUsername());
+             response = ResponseData.successResponse(avatarUrl);
+        } catch (IOException e) {
+            response = ResponseData.unknownError(e);
+            e.printStackTrace();
+        }
+        return response;
+    }
+
 //    @GetMapping("/user-list")
 //    public String getAll(
 //            @RequestParam(value = "start", defaultValue = "0")int start,
